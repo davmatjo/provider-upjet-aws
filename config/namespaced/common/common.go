@@ -91,6 +91,7 @@ func PasswordGenerator(secretRefFieldPath, toggleFieldPath string) config.NewIni
 			if err := paved.GetValueInto(secretRefFieldPath, sel); err != nil {
 				return errors.Wrapf(xpresource.Ignore(fieldpath.IsNotFound, err), "cannot unmarshal %s into a secret key selector", secretRefFieldPath)
 			}
+			sel.Namespace = mg.GetNamespace()
 			s := &corev1.Secret{}
 			if err := client.Get(ctx, types.NamespacedName{Namespace: sel.Namespace, Name: sel.Name}, s); xpresource.IgnoreNotFound(err) != nil {
 				return errors.Wrap(err, ErrGetPasswordSecret)
